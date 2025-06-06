@@ -29,12 +29,31 @@ def bleu_stats(hypothesis, reference):
 
 def bleu(stats):
     """Compute BLEU given n-gram statistics."""
-    if len(list(filter(lambda x: x == 0, stats))) > 0:
+    if stats[0] == 0 or stats[1] == 0:  # 检查hypothesis和reference长度
         return 0
+    
+    # 检查是否所有n-gram匹配都为0
+    n_gram_matches = stats[2::2]  # 提取所有n-gram匹配数
+    if all(match == 0 for match in n_gram_matches):
+        return 0
+    
     (c, r) = stats[:2]
-    log_bleu_prec = sum(
-        [math.log(float(x) / y) for x, y in zip(stats[2::2], stats[3::2])]
-    ) / 4.
+    
+    # 计算精确度，避免除零错误
+    precisions = []
+    for match, total in zip(stats[2::2], stats[3::2]):
+        if total == 0:
+            precisions.append(0)
+        else:
+            precisions.append(float(match) / total)
+    
+    # 如果所有精确度都为0，返回0
+    if all(p == 0 for p in precisions):
+        return 0
+    
+    # 计算几何平均
+    log_bleu_prec = sum([math.log(p) for p in precisions if p > 0]) / len([p for p in precisions if p > 0])
+    
     return math.exp(min([0, 1 - float(r) / c]) + log_bleu_prec)
 
 
@@ -47,10 +66,27 @@ def get_bleu(hypotheses, reference):
 
 
 def idx_to_word(x, vocab):
+    """
+    将索引序列转换为单词字符串，处理各种边界情况
+    """
     words = []
+    special_tokens = {'<pad>', '<unk>', '<sos>', '<eos>'}
+    
+    # 处理空输入
+    if not x:
+        return ""
+    
     for i in x:
-        word = vocab.itos[i]
-        if '<' not in word:
-            words.append(word)
-    words = " ".join(words)
-    return words
+        # 检查索引是否为有效整数
+        if not isinstance(i, (int, np.integer)):
+            continue
+            
+        # 检查索引是否在有效范围内
+        if 0 <= i < len(vocab.itos):
+            word = vocab.itos[i]
+            # 只过滤特殊的token，不过滤所有包含'<'的词
+            if word not in special_tokens:
+                words.append(word)
+        # 对于无效索引，跳过（不添加任何词）
+        
+    return " ".join(words)
