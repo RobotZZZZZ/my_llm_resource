@@ -1,0 +1,26 @@
+# 网络和异步处理
+aiohttp>=3.8.0
+asyncio-mqtt>=0.11.0
+websockets>=11.0.0
+
+# JSON-RPC和数据处理
+jsonrpcserver>=5.0.0
+jsonrpcclient>=4.0.0
+pydantic>=2.0.0
+
+# 文件和系统操作
+pathlib2>=2.3.0
+watchdog>=3.0.0
+
+# 日志和调试
+loguru>=0.7.0
+rich>=13.0.0
+
+# 开发和测试
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+
+# 可选依赖（用于高级功能）
+requests>=2.31.0
+numpy>=1.24.0
+pandas>=2.0.0 

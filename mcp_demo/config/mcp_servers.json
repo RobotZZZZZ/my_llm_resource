@@ -1,0 +1,74 @@
+{
+  "servers": {
+    "filesystem": {
+      "name": "Filesystem Server",
+      "description": "提供本地文件系统访问功能",
+      "executable": "python",
+      "args": ["servers/filesystem_server.py"],
+      "transport": "stdio",
+      "capabilities": {
+        "resources": true,
+        "tools": true,
+        "prompts": true
+      },
+      "settings": {
+        "allowed_paths": ["./test_data", "./examples"],
+        "max_file_size": 10485760,
+        "read_only": false
+      }
+    },
+    "calculator": {
+      "name": "Calculator Server",
+      "description": "提供数学计算功能",
+      "executable": "python",
+      "args": ["servers/calculator_server.py"],
+      "transport": "stdio",
+      "capabilities": {
+        "tools": true,
+        "prompts": true
+      },
+      "settings": {
+        "precision": 10,
+        "max_operations": 1000
+      }
+    },
+    "weather": {
+      "name": "Weather Server",
+      "description": "提供天气信息查询功能",
+      "executable": "python",
+      "args": ["servers/weather_server.py"],
+      "transport": "stdio",
+      "capabilities": {
+        "tools": true,
+        "resources": true,
+        "prompts": true
+      },
+      "settings": {
+        "api_timeout": 30,
+        "cache_duration": 300,
+        "default_units": "celsius"
+      }
+    }
+  },
+  "clients": {
+    "simple": {
+      "name": "Simple Client",
+      "description": "基本的MCP客户端示例",
+      "servers": ["filesystem", "calculator"],
+      "settings": {
+        "auto_connect": true,
+        "timeout": 30
+      }
+    },
+    "chat": {
+      "name": "Chat Client",
+      "description": "交互式聊天客户端",
+      "servers": ["filesystem", "calculator", "weather"],
+      "settings": {
+        "auto_connect": true,
+        "timeout": 60,
+        "max_history": 100
+      }
+    }
+  }
+} 
