@@ -166,3 +166,6 @@ cython_debug/
 .env.local
 
 /bak/
+
+*.json
+*.safetensors

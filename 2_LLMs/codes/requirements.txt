@@ -1,2 +1,10 @@
 torch
 triton-windows
+tokenizers
+huggingface_hub
+safetensors
+hf_xet
+tqdm
+ipywidgets
+tokenizers
+--index-url https://download.pytorch.org/whl/cu124
